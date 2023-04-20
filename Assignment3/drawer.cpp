@@ -1,18 +1,28 @@
-#include <iostream>
-#include <vector>
 #include <string>
 
 #include "drawer.hpp"
 
+// Constructor initializes the drawer object with a specific artist style
 drawer::drawer(artist* style) : style(style) {}
 
-string drawer::draw() 
-{ 
+// Protected method for derived classes to access the style
+artist* drawer::get_style() const
+{
+	return style;
+}
+
+// Generates the output string by applying the artist's mapping to each pixel
+string drawer::draw()
+{
+	artist* style = get_style();
+	int width = style->get_width();
+	int height = style->get_height();
+
 	string result = "";
 
-	for (int j = 0; j < style->height; j++)
+	for (int j = 0; j < height; j++)
 	{
-		for (int i = 0; i < style->width; i++)
+		for (int i = 0; i < width; i++)
 			result += style->mapper(i, j);
 
 		result += '\n';
@@ -21,32 +31,44 @@ string drawer::draw()
 	return result;
 }
 
+// Constructor initializes the downsample object with a specific artist style
 downsample::downsample(artist* style) : drawer(style) {}
 
+// Generates the downsampled output string by applying the artist's mapping to every other pixel
 string downsample::draw()
 {
+	artist* style = get_style();
+	int width = style->get_width();
+	int height = style->get_height();
+
 	string result = "";
 
-	for (int j = 0; j < style->height / 2; j++)
+	for (int j = 0; j < height / 2; j++)
 	{
-		for (int i = 0; i < style->width / 2; i++)
+		for (int i = 0; i < width / 2; i++)
 			result += style->mapper(i * 2, j * 2);
-		
+
 		result += '\n';
 	}
 
 	return result;
 }
 
+// Constructor initializes the upsample object with a specific artist style
 upsample::upsample(artist* style) : drawer(style) {}
 
+// Generates the upsampled output string by applying the artist's mapping with double resolution
 string upsample::draw()
 {
+	artist* style = get_style();
+	int width = style->get_width();
+	int height = style->get_height();
+
 	string result = "";
 
-	for (int j = 0; j < style->height * 2; j++)
+	for (int j = 0; j < height * 2; j++)
 	{
-		for (int i = 0; i < style->width * 2; i++)
+		for (int i = 0; i < width * 2; i++)
 			result += style->mapper(i / 2, j / 2);
 
 		result += '\n';
@@ -55,15 +77,18 @@ string upsample::draw()
 	return result;
 }
 
+// Constructor initializes the scale object with a specific artist style and scaling factors
 scale::scale(artist* style, int x, int y) : drawer(style), x(x), y(y) {}
 
+// Generates the scaled output string by applying the artist's mapping with custom scaling factors
 string scale::draw()
 {
+	artist* style = get_style();
+	int scaled_width = style->get_width();
+	int scaled_height = style->get_height();
+
 	string result = "";
 
-	int scaled_width = style->width;
-	int scaled_height = style->height;
-	
 	if (x >= 0)
 		scaled_width *= x;
 	else

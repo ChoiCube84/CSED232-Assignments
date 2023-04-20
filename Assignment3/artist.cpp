@@ -1,23 +1,25 @@
-#include <iostream>
 #include <vector>
-#include <string>
 
 #include "artist.hpp"
 
 using namespace std;
 
+// artist constructor initializes the artist object with dimensions and pixel values
 artist::artist(int width, int height, const vector<int>& vals) : width(width), height(height), vals(vals) {}
 
-char artist::mapper(int x, int y) 
-{
-	return 0;
-}
+// Getter methods for artist class
+int artist::get_width() const { return width; }
+int artist::get_height() const { return height; }
+int artist::get_pixel(int index) const { return vals[index]; }
 
+// classic constructor initializes the classic artist object with dimensions and pixel values
 classic::classic(int width, int height, const vector<int>& vals) : artist(width, height, vals) {}
 
+// classic mapper function generates the character representation for a pixel
 char classic::mapper(int x, int y)
 {
-	int pixel = vals[x + width * y];
+	int width = get_width();
+	int pixel = get_pixel(x + width * y);
 
 	pixel /= 17;
 
@@ -71,11 +73,14 @@ char classic::mapper(int x, int y)
 	}
 }
 
+// iclassic constructor initializes the iclassic artist object with dimensions and pixel values
 iclassic::iclassic(int width, int height, const vector<int>& vals) : artist(width, height, vals) {}
 
+// iclassic mapper function generates the inverted character representation for a pixel
 char iclassic::mapper(int x, int y)
 {
-	int pixel = vals[x + width * y];
+	int width = get_width();
+	int pixel = get_pixel(x + width * y);
 
 	pixel /= 17;
 
@@ -129,15 +134,20 @@ char iclassic::mapper(int x, int y)
 	}
 }
 
+// sobelx constructor initializes the sobelx artist object with dimensions and pixel values
 sobelx::sobelx(int width, int height, const vector<int>& vals) : artist(width, height, vals) {}
 
+// sobelx mapper function generates the character representation for a pixel based on Sobel X edge detection
 char sobelx::mapper(int x, int y)
 {
-	int origin = vals[x + width * y];
+	int width = get_width();
+	int index = x + width * y;
+
+	int origin = get_pixel(index);
 
 	if (x < width - 1)
 	{
-		int right = vals[(x + 1) + width * y];
+		int right = get_pixel(index + 1);
 		int offset = right - origin;
 
 		if (offset < 50 && offset > -50) return ' ';
@@ -146,15 +156,21 @@ char sobelx::mapper(int x, int y)
 	else return ' ';
 }
 
+// sobely constructor initializes the sobely artist object with dimensions and pixel values
 sobely::sobely(int width, int height, const vector<int>& vals) : artist(width, height, vals) {}
 
+// sobely mapper function generates the character representation for a pixel based on Sobel Y edge detection
 char sobely::mapper(int x, int y)
 {
-	int origin = vals[x + width * y];
+	int width = get_width();
+	int height = get_height();
+	int index = x + width * y;
+
+	int origin = get_pixel(index);
 
 	if (y < height - 1)
 	{
-		int down = vals[x + width * (y + 1)];
+		int down = get_pixel(index + width);
 		int offset = down - origin;
 
 		if (offset < 50 && offset > -50) return ' ';
@@ -163,18 +179,24 @@ char sobely::mapper(int x, int y)
 	else return ' ';
 }
 
+// gradient constructor initializes the gradient artist object with dimensions and pixel values
 gradient::gradient(int width, int height, const vector<int>& vals) : artist(width, height, vals) {}
 
+// gradient mapper function generates the character representation for a pixel based on gradient edge detection
 char gradient::mapper(int x, int y)
 {
-	int origin = vals[x + width * y];
+	int width = get_width();
+	int height = get_height();
+	int index = x + width * y;
+
+	int origin = get_pixel(index);
 
 	bool x_check = false;
 	bool y_check = false;
 
 	if (x < width - 1)
 	{
-		int right = vals[(x + 1) + width * y];
+		int right = get_pixel(index + 1);
 		int offset = right - origin;
 
 		if (offset < 50 && offset > -50) x_check = false;
@@ -184,7 +206,7 @@ char gradient::mapper(int x, int y)
 
 	if (y < height - 1)
 	{
-		int down = vals[x + width * (y + 1)];
+		int down = get_pixel(index + width);
 		int offset = down - origin;
 
 		if (offset < 50 && offset > -50) y_check = false;
