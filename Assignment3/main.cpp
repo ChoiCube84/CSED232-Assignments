@@ -46,9 +46,6 @@ int main(int argc, char* argv[]) {
 	else if (style_target == "gradient") {
 		style = new gradient(width, height, vals);
 	}
-	else if (style_target == "sobeldiag") {
-		style = new sobeldiag(width, height, vals);
-	}
 	else {
 		throw;
 	}
