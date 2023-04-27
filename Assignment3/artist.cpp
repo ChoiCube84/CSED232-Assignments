@@ -7,6 +7,8 @@ using namespace std;
 // artist constructor initializes the artist object with dimensions and pixel values
 artist::artist(int width, int height, const vector<int>& vals) : width(width), height(height), vals(vals) {}
 
+artist::~artist() {}
+
 // Getter methods for artist class
 int artist::get_width() const { return width; }
 int artist::get_height() const { return height; }
@@ -225,4 +227,29 @@ char gradient::mapper(int x, int y)
 		if (y_check) return '-';
 		else return ' ';
 	}
+}
+
+// Constructor for the sobeldiag class, initializing with width, height, and values
+sobeldiag::sobeldiag(int width, int height, const vector<int>& vals) : artist(width, height, vals) {}
+
+// sobeldiag mapper function, generating diagonal Sobel edges in the output
+char sobeldiag::mapper(int x, int y)
+{
+	int width = get_width();
+	int height = get_height();
+
+	int index = x + width * y;
+
+	int origin = get_pixel(index);
+
+	// Check if we're not at the edge of the image
+	if (x < width - 1 && y < height - 1)
+	{
+		int diag = get_pixel(index + 1 + width);
+		int offset = diag - origin;
+
+		if (offset < 50 && offset > -50) return ' ';
+		else return '\\';
+	}
+	else return ' ';
 }

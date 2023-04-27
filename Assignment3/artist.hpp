@@ -21,6 +21,8 @@ public:
     // Constructor initializes the artist object with image dimensions and pixel values
     artist(int, int, const vector<int>&);
 
+    ~artist();
+
     // Public methods for accessing image dimensions
     int get_width(void) const;
     int get_height(void) const;
@@ -61,4 +63,9 @@ public:
     char mapper(int, int) override;
 };
 
+class sobeldiag : public artist {
+public:
+    sobeldiag(int, int, const vector<int>&);
+    char mapper(int, int) override;
+};
 #endif // !__ARTIST_HPP__

@@ -5,6 +5,12 @@
 // Constructor initializes the drawer object with a specific artist style
 drawer::drawer(artist* style) : style(style) {}
 
+// Destructor for the drawer class, handling artist object deletion
+drawer::~drawer()
+{
+	delete style;
+}
+
 // Protected method for derived classes to access the style
 artist* drawer::get_style() const
 {

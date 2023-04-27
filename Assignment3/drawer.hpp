@@ -20,6 +20,9 @@ public:
     // Constructor initializes the drawer object with a specific artist style
     drawer(artist*);
 
+    // Destructor for the drawer class, handling artist object deletion
+    ~drawer();
+
     // Virtual function for applying the transformation and generating the output
     // Derived classes must override this function to implement specific operations
     virtual string draw(void);
